@@ -13,7 +13,7 @@ const routes = [
         redirect: "/dashboard",
         component: DefaultLayout,
         meta: {
-            requireAuth:true,
+            requireAuth: true,
         },
         children: [
             { path: "/dashboard", name: "dashboard", component: Dashboard },
@@ -21,14 +21,14 @@ const routes = [
         ],
     },
     {
-        path: "/login",
-        name: "login",
-        component: Login,
-    },
-    {
         path: "/register",
         name: "register",
         component: Register,
+    },
+    {
+        path: "/login",
+        name: "login",
+        component: Login,
     },
 ];
 
@@ -37,17 +37,12 @@ const router = createRouter({
     routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
     if (to.meta.requireAuth && !store.state.user.token) {
-        next({ name: 'login' })
-    } else if (store.state.user.token && to.name === 'login' || to.name === 'register') {
-        next('dashboard')
+        return { name: "login" };
+    } else if (store.state.user.token && (to.name === "login" || to.name === "register")) {
+        return { name: "dashboard" };
     }
-     else {
-        next()
-    }
-})
-
-
+});
 
 export default router;
