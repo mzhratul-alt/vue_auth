@@ -6,6 +6,7 @@ import Register from "../views/Register.vue";
 import Users from "../views/User.vue";
 import DefaultLayout from "../components/DefaultLayout.vue";
 import store from "../store/store";
+import axios from "axios";
 
 const routes = [
     {
@@ -37,12 +38,13 @@ const router = createRouter({
     routes,
 });
 
+
 router.beforeEach((to, from) => {
-    if (to.meta.requireAuth && !store.state.user.token) {
-        return { name: "login" };
-    } else if (store.state.user.token && (to.name === "login" || to.name === "register")) {
-        return { name: "dashboard" };
-    }
+    store.commit('checkAuth')
+    // if ((to.meta.requireAuth && !store.state.token)) {
+    //     return { name: "login" };
+    // } else if (store.state.token && to.name == 'login' || to.name == 'register') {
+    // }
 });
 
 export default router;

@@ -1,35 +1,38 @@
 import axios from "axios";
 import { createStore } from "vuex";
+import router from "../router/router";
 
 const store = createStore({
     state: {
-        user: {
-            data: {},
-            token: localStorage.getItem("token"),
-        },
+        user: {},
+        token: localStorage.getItem("token") || null,
         url: "http://127.0.0.1:8000/api/",
     },
     getters: {},
-    actions: {
-        register({ commit }, user) {
-            axios.post(this.state.url+'register', user)
-                .then((res) => {
-                    commit('setUser',res)
-                })
-                .catch((err) => {
-                    console.log(err.data)
-                })
-        },
-    },
+    actions: {},
     mutations: {
         logout(state) {
-            state.user.data = {};
-            state.user.token = null;
+            state.user = {};
+            state.token = null;
         },
-        setUser: (state, userData) => {
-            state.user.token = userData.token;
-            state.user.data = userData.user;
-            localStorage.setItem('token',userData.token)
+        objReset(state, obj) {
+            for (var property in obj) {
+                obj[property] = "";
+            }
+        },
+        storeUser(state, resData) {
+            state.user = resData.data.user;
+            state.token = resData.data.access_token;
+            localStorage.setItem("token", resData.data.access_token);
+        },
+        checkAuth(state) {
+            if (state.token !== "") {
+                if (state.token !== localStorage.getItem("token")) {
+                    router.push({ name: "login" });
+                }
+            } else {
+                router.push({ name: "login" });
+            }
         },
     },
     modules: {},

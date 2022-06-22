@@ -17,16 +17,20 @@
                                     <label>Name</label>
                                     <input type="text" class="form-control" id="exampleInputFirstName"
                                        placeholder="Enter Your Name" v-model="user.name">
+                                    <span class="text-danger">{{ errors.name }}</span>
                                  </div>
                                  <div class="form-group">
                                     <label>Email</label>
                                     <input type="email" class="form-control" id="exampleInputEmail"
-                                       aria-describedby="emailHelp" placeholder="Enter Email Address" v-model="user.email">
+                                       aria-describedby="emailHelp" placeholder="Enter Email Address"
+                                       v-model="user.email">
+                                    <span class="text-danger">{{ errors.email }}</span>
                                  </div>
                                  <div class="form-group">
                                     <label>Password</label>
                                     <input type="password" class="form-control" id="exampleInputPassword"
-                                       placeholder="Password" :v-model="user.password">
+                                       placeholder="Password" v-model="user.password">
+                                    <span class="text-danger">{{ errors.password }}</span>
                                  </div>
                                  <!-- <div class="form-group">
                                     <label>Repeat Password</label>
@@ -56,25 +60,39 @@
 </template>
 
 <script>
-import router from '../router/router'
+import axios from 'axios'
 import store from '../store/store'
 
 export default {
    data() {
       return {
          user: {
-            name:'',
-            email:'',
-            password:'',
+            name: '',
+            email: '',
+            password: '',
+         },
+         errors: {
+            name: '',
+            email: '',
+            password: '',
          }
       }
    },
-   methods:{
+   methods: {
       register() {
-         console.log(this.user)
-         store.dispatch('register', this.user)
-            .then(() => {
-               router.push({name:'dashboard'})
+
+         store.commit('objReset', this.errors)
+         axios.post(store.state.url + 'auth/register', this.user)
+            .then((res) => {
+               this.$router.push({name:'login'})
+               this.$Notice.success({
+                  title: 'Registered Successfully. Please Log In'
+               })
+            })
+            .catch((err) => {
+               this.errors.name = (err.response.data.errors.name) ? err.response.data.errors.name[0] : '';
+               this.errors.email = (err.response.data.errors.email) ? err.response.data.errors.email[0] : '';
+               this.errors.password = (err.response.data.errors.password) ? err.response.data.errors.password[0] : '';
             })
       }
    }
