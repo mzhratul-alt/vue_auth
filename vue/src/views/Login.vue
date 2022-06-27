@@ -73,21 +73,23 @@ export default {
    methods: {
       login() {
          store.commit('objReset', this.errors)
-         axios.post(store.state.url + 'auth/login', this.user)
-            .then((res) => {
-               store.commit('storeUser',res)
-               this.$router.push({ name: 'dashboard' })
-               this.$Notice.success({
-                  title: 'Loged In Successfully'
-               })
-            })
-            .catch((err) => {
-               this.$Notice.error({
-                  title: 'Invalid Credintials'
-               })
-               this.errors.email = (err.response.data.errors.email) ? err.response.data.errors.email[0] : '';
-               this.errors.password = (err.response.data.errors.password) ? err.response.data.errors.password[0] : '';
-            })
+         // axios.post(store.state.url + 'auth/login', this.user)
+         //    .then((res) => {
+         //       store.commit('storeUser',res)
+         //       this.$router.push({ name: 'dashboard' })
+         //       this.$Notice.success({
+         //          title: 'Loged In Successfully'
+         //       })
+         //    })
+         //    .catch((err) => {
+         //       this.$Notice.error({
+         //          title: 'Invalid Credintials'
+         //       })
+         //       this.errors.email = (err.response.data.errors.email) ? err.response.data.errors.email[0] : '';
+         //       this.errors.password = (err.response.data.errors.password) ? err.response.data.errors.password[0] : '';
+         //    })
+
+         store.dispatch('login', this.user)
       }
    }
 }

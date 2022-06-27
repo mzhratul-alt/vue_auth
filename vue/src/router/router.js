@@ -14,7 +14,7 @@ const routes = [
         redirect: "/dashboard",
         component: DefaultLayout,
         meta: {
-            requireAuth: true,
+            authenticated: true,
         },
         children: [
             { path: "/dashboard", name: "dashboard", component: Dashboard },
@@ -38,13 +38,12 @@ const router = createRouter({
     routes,
 });
 
-
 router.beforeEach((to, from) => {
-    store.commit('checkAuth')
-    // if ((to.meta.requireAuth && !store.state.token)) {
-    //     return { name: "login" };
-    // } else if (store.state.token && to.name == 'login' || to.name == 'register') {
-    // }
+    if (to.meta.authenticated && !store.state.token) {
+        return { name: "login" };
+    } else if (store.state.token && to.name == 'login' || to.name == 'register') {
+        return { name: 'dashboard' }
+    }
 });
 
 export default router;

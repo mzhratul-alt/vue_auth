@@ -222,7 +222,7 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                            <img class="img-profile rounded-circle" src="src/assets/img/boy.png"
                               style="max-width: 60px" />
-                           <span class="ml-2 d-none d-lg-inline text-white small">Maman Ketoprak</span>
+                           <span class="ml-2 d-none d-lg-inline text-white small">{{ $store.state.userName }}</span>
                         </a>
                         <div class="
                     dropdown-menu dropdown-menu-right
